@@ -1,19 +1,15 @@
-import { Expose ,Transform} from "class-transformer";
-import { IsNotEmpty,Length } from "class-validator";
-import { BaseDto } from "src/base.dto";
+import { Expose, Transform } from "class-transformer";
 
-
-
-export class UserDto extends  BaseDto{
-    @IsNotEmpty()
+export class UserDto{
     @Expose()
-    username: string;
-    firstName:string;
-    lastName:string;
-    @Transform(({obj})=> obj.firstName + " " + obj.lastName)
-    fullname:string;
-    @IsNotEmpty()
-    @Length(10,20)
+    id:number;
+
+    firstName: string;
+    
+    lastName: string;
     @Expose()
-    password: string;
+    @Transform(({obj})=>{obj.firstName +" "+ obj.lastName})
+    fullName: string;
+    @Expose()
+    isActive: boolean;
 }

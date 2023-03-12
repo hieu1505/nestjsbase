@@ -1,33 +1,22 @@
-import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from "@nestjs/common";
-import { plainToClass } from "class-transformer";
-import console from "console";
+import { Controller,Body,Post, Put, Param, Get } from "@nestjs/common";
 import { UserDto } from "./user.dto";
+import { UserService } from "./user.service";
 
 @Controller('users')
-export class UserController {
-    @UsePipes(new ValidationPipe())
-    @Get()
-    getallusers(){
-        return [{
-            name: 'hieu',
-            age:'18'
-        },{
-            name: 'binh',
-            age:'20',
-        }]
+ export class UserController {
+    constructor(private readonly userService: UserService){
+
     }
     @Post()
-    createuser(@Body() user:UserDto):UserDto{
-        user.createdAt=new Date();
-        user.id=1;
-        user.updatedAt= new Date();
-        // const userReal=plainToClass(UserDto,user,{excludeExtraneousValues:true});
-        // console.log(userReal);
-       return UserDto.plainToClass(user);
-    }
+    createUser(@Body() user:UserDto):Promise<UserDto>{
+        console.log(user);
+        return this.userService.save(user);}
+    @Put(':id')
+    updateUserById(@Param('id')id:number,@Body()user:UserDto):Promise<{result:string}>{
+        return this.userService.update(id,user);}
     @Get(':id')
-    getUserById(@Param('id') id:number){
-        console.log(id);
-        return 'test'
+    getById(@Param('id')id:number):Promise<UserDto>{
+        console.log(id)
+        return this.userService.findOne(id);
     }
-}
+ }
